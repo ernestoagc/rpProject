@@ -48,8 +48,7 @@ namespace WebUI
                 */
                 HttpWebRequest req2 = (HttpWebRequest)WebRequest.Create("http://localhost:56583/Servicio.svc/Inmuebles/");
                 req2.Method = "GET";
-               // req2.ContentType = "application/json";
-                //var reqStream = req2.GetRequestStream();
+
                 HttpWebResponse res2 = (HttpWebResponse)req2.GetResponse();
                 StreamReader reader2 = new StreamReader(res2.GetResponseStream());
                 string AlmacenesJson = reader2.ReadToEnd();
