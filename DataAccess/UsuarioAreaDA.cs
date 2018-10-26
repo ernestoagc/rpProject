@@ -46,5 +46,49 @@ namespace DataAccess
 
             return pUsuarioAreaBE;
         }
+
+        public UsuarioAreaBE Delete(UsuarioAreaBE pUsuarioAreaBE)
+        {
+            int resultado = 0;
+            try
+            {
+
+                using (dbModelo db = new dbModelo())
+                {
+                    USUARIO_AREA oUSUARIO_AREA = (from elem in db.USUARIO_AREA where elem.ID == pUsuarioAreaBE.ID select elem).FirstOrDefault();
+                    db.USUARIO_AREA.Remove(oUSUARIO_AREA);
+                    resultado = db.SaveChanges();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            return pUsuarioAreaBE;
+        }
+
+        public UsuarioAreaBE DeleteAreas(UsuarioAreaBE pUsuarioAreaBE)
+        {
+            int resultado = 0;
+            try
+            {
+
+                using (dbModelo db = new dbModelo())
+                {
+                    var oUSUARIO_AREAS = (from elem in db.USUARIO_AREA where elem.AREA == pUsuarioAreaBE.AREA select elem).ToList();
+                    db.USUARIO_AREA.RemoveRange(oUSUARIO_AREAS);
+                    resultado = db.SaveChanges();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            return pUsuarioAreaBE;
+        }
     }
 }

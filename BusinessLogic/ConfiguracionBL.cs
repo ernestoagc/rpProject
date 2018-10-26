@@ -71,7 +71,16 @@ namespace BusinessLogic
 
         public AreaBE DeleteArea(AreaBE pAreaBE)
         {
-            return areaDA.Delete(pAreaBE);
+
+            using (TransactionScope transactionScope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions() { IsolationLevel = System.Transactions.IsolationLevel.RepeatableRead }))
+            {
+                UsuarioAreaBE usuarioAreaBE = new UsuarioAreaBE() {AREA= pAreaBE.ID};
+                usuarioAreaDA.DeleteAreas(usuarioAreaBE);
+                areaDA.Delete(pAreaBE);
+
+                transactionScope.Complete();
+            }
+            return pAreaBE;
         }
 
         public UsuarioBE InsertUsuario(UsuarioBE usuarioBE)

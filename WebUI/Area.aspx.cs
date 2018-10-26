@@ -25,10 +25,9 @@ namespace WebUI
             set {
                         Session["inmuebles"] = value;
                 }
-           }
-       
+            }
 
-        
+        #region Eventos
         protected void Page_Init(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
@@ -37,32 +36,68 @@ namespace WebUI
             }
         }
 
-        private void llenarInmueblesServicio() {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!Page.IsPostBack)
+            {
+                Initializate();
+            }
 
-            if (inmuebles == null) {
+        }
+
+        protected void btnNuevo_Click(object sender, EventArgs e)
+        {
+            AreaBE AreaBE = new AreaBE();
+            AreaBE.NOMBRE = txtNombre.Text;
+
+            AreaBE.INMUEBLE_CODIGO = ddlInmueble.SelectedItem.Value;
+
+            configuracionBL.InsertArea(AreaBE);
+            llenarTabla();
+            txtNombre.Text = string.Empty;
+            ddlInmueble.ClearSelection();
+
+        }
+
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (hdnId.Value != null) {
+                AreaBE areaBE =new  AreaBE();
+                areaBE.ID = Convert.ToInt32(hdnId.Value);
+                configuracionBL.DeleteArea(areaBE);
+               // ScriptManager.RegisterClientScriptBlock(this.Page,this.Page.GetType(), "prue2", "ShowMessage('Operación efectuada satisfactoriamente','success');", false);
+                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(),
+               "esconder",
+               "closeDeteleModal('Operación efectuada satisfactoriamente','success');",
+               true);
+
+                llenarTabla();
+            }
+        }
+
+        #endregion
+
+
+        #region Funciones
+        private void llenarInmueblesServicio()
+        {
+
+            if (inmuebles == null)
+            {
                 /*
                 inmuebles = new List<InmuebleBE>();
                 inmuebles.Add(new InmuebleBE() { CODIGO = "IN1", NOMBRE = "LIMA" });
                 inmuebles.Add(new InmuebleBE() { CODIGO = "IN2", NOMBRE = "CENTRO" });
                 inmuebles.Add(new InmuebleBE() { CODIGO = "IN3", NOMBRE = "SALAVERRY" });
                 */
-                HttpWebRequest req2 = (HttpWebRequest)WebRequest.Create("http://localhost:56583/Servicio.svc/Inmuebles/");
+                HttpWebRequest req2 = (HttpWebRequest)WebRequest.Create("http://petloverapp-001-site1.htempurl.com/Servicio.svc/Inmuebles/");
                 req2.Method = "GET";
 
                 HttpWebResponse res2 = (HttpWebResponse)req2.GetResponse();
                 StreamReader reader2 = new StreamReader(res2.GetResponseStream());
                 string AlmacenesJson = reader2.ReadToEnd();
                 List<InmuebleBE> lst2 = AlmacenesJson.DeserializarJsonTo<List<InmuebleBE>>();
-                inmuebles=  lst2;
-            }
-
-        }
-
-            protected void Page_Load(object sender, EventArgs e)
-        {
-            if (!Page.IsPostBack)
-            {
-                Initializate();
+                inmuebles = lst2;
             }
 
         }
@@ -95,7 +130,8 @@ namespace WebUI
             return salida;
         }
 
-            private void llenarComboInmuebles() {
+        private void llenarComboInmuebles()
+        {
             ddlInmueble.DataSource = inmuebles;
             ddlInmueble.DataValueField = "CODIGO";
             ddlInmueble.DataTextField = "NOMBRE";
@@ -110,22 +146,7 @@ namespace WebUI
         }
 
 
-        protected void btnNuevo_Click(object sender, EventArgs e)
-        {
-            AreaBE AreaBE = new AreaBE();
-            AreaBE.NOMBRE = txtNombre.Text;
+        #endregion
 
-            AreaBE.INMUEBLE_CODIGO= ddlInmueble.SelectedItem.Value;
-
-            configuracionBL.InsertArea(AreaBE);
-            llenarTabla();
-            ddlInmueble.ClearSelection();
-
-        }
-
-        protected void btnDelete_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

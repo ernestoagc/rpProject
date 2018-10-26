@@ -7,7 +7,33 @@
           function DeleteRecord(id) { 
             document.getElementById("<%= hdnId.ClientID %>").value = id;
             $('#deleteModal').modal("show");
-        }
+            }
+
+
+
+        function CloseMessageModal(divId) {
+            try {
+                var divMessage = document.getElementById(divId);
+                divMessage.innerHTML = '';
+            } catch (e) {
+
+            }
+            }
+
+            function closeDeteleModal(message,tipo) {
+                //$('#deleteModal').modal('hide');
+                //  document.getElementById('btnCerrando').click();
+                      
+                var divMessage = document.getElementById('messageArea');
+
+                modal.innerHTML = '';
+            divMessage.innerHTML = '<div class="alert alert-' + tipo + ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' + message + '</div>';
+                setTimeout(
+             function () {
+                 CloseMessageModal(divMessage);
+             }, 500);
+            }
+
             $(document).ready(function () {
            
             });
@@ -17,13 +43,16 @@
    
     <asp:UpdatePanel runat="server" ID="updtArea">
         <ContentTemplate>
-
+            <div class="container">
        
     <div class="row">
          <div style="float: left; width: 100%; display:block;">
                 <h1><small> Areas</small></h1>
             </div>
         </div>
+            <div class="row">
+                <div id="messageArea" style="padding: 5px 0 5px 0;"></div>
+                </div>
          <form>
           <div class="row">
             <div class="col">
@@ -73,7 +102,7 @@
                                         </table>
                   </div>
 
-				  
+		 </div>		  
 				     <%--Delete--%>
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
@@ -84,12 +113,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-horizontal" role="form">
-                        ¿Seguro de Eliminar?                                                              
+                        ¿Seguro de Eliminar, vas a dejar a usuarios sin Area registrada?                                                              
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    <asp:Button ID="btnDelete" UseSubmitBehavior="false" runat="server" class="btn btn-danger" CausesValidation="false" ValidationGroup="ninguno" OnClick="btnDelete_Click" Text="Eliminar" />
+                    <button type="button" class="btn btn-default" id="btnCerrando" data-dismiss="modal">Cerrar</button>
+                    <asp:Button    OnClientClick="$('#deleteModal').modal('hide');" ID="btnDelete" UseSubmitBehavior="true"  data-dismiss="modal" runat="server" class="btn btn-danger" CausesValidation="false" ValidationGroup="ninguno" OnClick="btnDelete_Click" Text="Eliminar" />
                 </div>
             </div>
         </div>
@@ -99,6 +128,7 @@
              </ContentTemplate>
         <Triggers>
             <asp:AsyncPostBackTrigger ControlID="btnNuevo" EventName="Click"/>
+            <asp:AsyncPostBackTrigger ControlID="btnDelete" EventName="Click"/>
         </Triggers>
     </asp:UpdatePanel>
 	

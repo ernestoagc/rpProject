@@ -158,7 +158,8 @@ namespace DataAccess
                 {
                     AREA oAREA = (from elem in db.AREA where elem.ID == pAreaBE.ID select elem).FirstOrDefault();
                     db.AREA.Remove(oAREA);
-                    resultado = db.SaveChanges();
+                    
+                 resultado = db.SaveChanges();
                 }
 
             }
